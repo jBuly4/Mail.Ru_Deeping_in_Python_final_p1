@@ -1,4 +1,5 @@
 import socket
+import time
 
 class Client:
 
@@ -26,8 +27,16 @@ class Client:
 
 
 
-    # def put(self, key, value):
-    #
+    def put(self, key, value, timestamp=None):
+        normal_answ = 'ok\n\n'
+        try:
+            if timestamp == None:
+                self.connection.send(key, value, int(time.time()))
+            else:
+                self.connection.send(key, value, int(timestamp))
+        except Exception as ClientError:
+            print(type(ClientError)) # dunno if it would work
+            raise ClientError
 
     def __del__(self):
         self.connection.close()

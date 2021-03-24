@@ -1,6 +1,11 @@
 import socket
 import time
 
+class ClientError(Exception):
+
+    def __init__(self, text):
+        self.text = text
+
 class Client:
 
     """client for putting and getting metrics """
@@ -34,9 +39,12 @@ class Client:
                 self.connection.send(key, value, int(time.time()))
             else:
                 self.connection.send(key, value, int(timestamp))
-        except Exception as ClientError:
-            print(type(ClientError)) # dunno if it would work
-            raise ClientError
+            data_recvd = self.connection.recv(1024)
+            if data_recvd != normal_answ:
+                raise ClientError("ClientError")
+        except ClientError as clErr:
+            print(clErr) # dunno if it would work
+            # raise ClientError
 
     def __del__(self):
         self.connection.close()

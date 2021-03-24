@@ -8,15 +8,15 @@ class ClientError(Exception):
 
 class Client:
 
+
     """client for putting and getting metrics """
 
-     def __init__(self, adr, port, timeout=None):
-         self.adr = adr
-         self.port = port
-         self.timeout = timeout
+    def __init__(self, adr, port, timeout=None):
+        self.adr = adr
+        self.port = port
+        self.timeout = timeout
 
-         self.connection = socket.socket()
-         self.connection.connect((self.adr, seld.port), timeout)
+        self.connection = socket.create_connection((self.adr, self.port), timeout)
 
          # with socket.socket() as connection:
          #     connection.connect((self.adr, seld.port), timeout)

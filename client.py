@@ -41,8 +41,8 @@ class Client:
         try:
             self.connection.send(str.encode(data_to_snd)) # https://docs.python.org/3/library/stdtypes.html?highlight=str.encode#str.encode
             data_recvd = self.connection.recv(1024).decode()
-            print('recieved answer:\n')
-            print(data_recvd)
+            # print('recieved answer:\n')
+            # print(data_recvd)
             if data_recvd != normal_answ:
                 raise ClientError("ClientError")
         except ClientError as clErr:

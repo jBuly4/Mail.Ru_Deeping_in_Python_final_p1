@@ -34,17 +34,28 @@ class Client:
 
     def put(self, key, value, timestamp=None):
         normal_answ = 'ok\n\n'
+        if timestamp == None:
+            data_to_snd = str(key)+','+str(value)+','+str(int(time.time()))
+        else:
+            data_to_snd = str(key)+','+str(value)+','+str(timestamp)
         try:
-            if timestamp == None:
-                self.connection.send(key, value, int(time.time()))
-            else:
-                self.connection.send(key, value, int(timestamp))
+            self.connection.send(data_to_snd)
             data_recvd = self.connection.recv(1024)
             if data_recvd != normal_answ:
                 raise ClientError("ClientError")
         except ClientError as clErr:
-            print(clErr) # dunno if it would work
-            # raise ClientError
+            print(clErr)
+        # try:
+        #     if timestamp == None:
+        #         self.connection.send(key, value, )
+        #     else:
+        #         self.connection.send(key, value, int(timestamp))
+        #     data_recvd = self.connection.recv(1024)
+        #     if data_recvd != normal_answ:
+        #         raise ClientError("ClientError")
+        # except ClientError as clErr:
+        #     print(clErr) # dunno if it would work
+        #     # raise ClientError
 
     def __del__(self):
         self.connection.close()

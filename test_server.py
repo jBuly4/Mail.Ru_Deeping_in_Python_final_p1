@@ -25,3 +25,5 @@ while True:
     conn.send(response)
 
 conn.close()
+
+# https://habr.com/ru/post/514100/ - maybe it will help

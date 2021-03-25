@@ -39,7 +39,7 @@ class Client:
         else:
             data_to_snd = str(key)+','+str(value)+','+str(timestamp)
         try:
-            self.connection.send(data_to_snd)
+            self.connection.send(str.encode(data_to_snd)) # https://docs.python.org/3/library/stdtypes.html?highlight=str.encode#str.encode
             data_recvd = self.connection.recv(1024)
             if data_recvd != normal_answ:
                 raise ClientError("ClientError")

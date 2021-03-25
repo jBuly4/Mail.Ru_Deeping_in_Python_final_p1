@@ -40,22 +40,13 @@ class Client:
             data_to_snd = str(key)+','+str(value)+','+str(timestamp)
         try:
             self.connection.send(str.encode(data_to_snd)) # https://docs.python.org/3/library/stdtypes.html?highlight=str.encode#str.encode
-            data_recvd = self.connection.recv(1024)
+            data_recvd = self.connection.recv(1024).decode()
+            print('recieved answer:\n')
+            print(data_recvd)
             if data_recvd != normal_answ:
                 raise ClientError("ClientError")
         except ClientError as clErr:
             print(clErr)
-        # try:
-        #     if timestamp == None:
-        #         self.connection.send(key, value, )
-        #     else:
-        #         self.connection.send(key, value, int(timestamp))
-        #     data_recvd = self.connection.recv(1024)
-        #     if data_recvd != normal_answ:
-        #         raise ClientError("ClientError")
-        # except ClientError as clErr:
-        #     print(clErr) # dunno if it would work
-        #     # raise ClientError
 
     def __del__(self):
         self.connection.close()

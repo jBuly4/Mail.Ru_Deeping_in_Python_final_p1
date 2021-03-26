@@ -30,13 +30,14 @@ class Client:
             data_recvd = self.connection.recv(1024).decode()[:-2]
             if len(data_recvd) == 2 and data_recvd != normal_answ:
                 raise ClientError("ClientError")
+                return data_returned
 
             if len(data_recvd) == 2 and data_recvd == normal_answ:
                 return data_returned
-            print('recieved answer:\n')
-            print(data_recvd)
+            # print('recieved answer:\n')
+            # print(data_recvd)
             tmp_lst = data_recvd.split('\n')
-            print(tmp_lst)
+            # print(tmp_lst)
             if tmp_lst[0] != normal_answ:
                 raise ClientError("ClientError")
 
@@ -48,8 +49,6 @@ class Client:
             print(clErr)
 
         return data_returned
-
-#response = b'ok\npalm.cpu 10.5 1501864247\neardrum.cpu 15.3 1501864259\n\n'
 
 
     def put(self, key, value, timestamp=None):

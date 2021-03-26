@@ -23,6 +23,7 @@ class Client:
 
     def get(self, key):
         normal_answ = 'ok'
+        key = str(key) + '\n'
         data_returned = {}
         tmp_lst = []
         self.connection.send(key.encode())

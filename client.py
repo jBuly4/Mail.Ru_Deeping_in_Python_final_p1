@@ -35,14 +35,19 @@ class Client:
                 return data_returned
             # print('recieved answer:\n')
             # print(data_recvd)
-            tmp_lst = data_recvd.split('\n')
+            tmp_lst = data_recvd.split('\n') #list of lines
             # print(tmp_lst)
             if tmp_lst[0] != normal_answ:
                 raise ClientError("ClientError")
             else:
                 for data in tmp_lst[1:]:
+                    tmp_answ_lst = data.split(' ') #list of keys, values and timestamps
+                    data_returned[tmp_answ_lst[0]] = []
+
+                for data in tmp_lst[1:]:
                     tmp_answ_lst = data.split(' ')
-                    data_returned[tmp_answ_lst[0]] = tuple(tmp_answ_lst[1:])
+                    data_returned[tmp_answ_lst[0]].append((tmp_answ_lst[2], tmp_answ_lst[1],))
+                sorted(data_returned.items(),key=lambda values: values[1][0])
                 return data_returned
         except ClientError as clErr:
             print(clErr)

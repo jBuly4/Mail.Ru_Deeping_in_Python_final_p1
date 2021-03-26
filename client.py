@@ -21,15 +21,31 @@ class Client:
          # with socket.socket() as connection:
          #     connection.connect((self.adr, seld.port), timeout)
 
-    # def get(self, key):
-    #     data_returned = {}
-    #     self.connection.send(key)
-    #     try:
-    #         data_returned = self.connection.recv()
-    #     except ClientError as e:
-    #         raise
+    def get(self, key):
+        normal_answ = 'ok'
+        data_returned = {}
+        tmp_lst = []
+        self.connection.send(key.encode())
+        try:
+            data_recvd = self.connection.recv(1024).decode()
+            print('recieved answer:\n')
+            print(data_recvd)
+            tmp_lst = data_recvd.split('\n')
+            print(tmp_lst)
 
+            if tmp_lst[0] != normal_answ:
+                raise ClientError("ClientError")
 
+            for data in tmp_lst[1:]:
+                tmp_answ_lst = data.split(' ')
+                data_returned[tmp_answ_lst[0]] = tuple(tmp_answ_lst[1:])
+
+            print(data_returned)
+
+        except ClientError as clErr:
+            print(clErr)
+
+#response = b'ok\npalm.cpu 10.5 1501864247\neardrum.cpu 15.3 1501864259\n\n'
 
 
     def put(self, key, value, timestamp=None):

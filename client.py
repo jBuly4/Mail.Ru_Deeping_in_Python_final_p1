@@ -27,12 +27,16 @@ class Client:
         tmp_lst = []
         self.connection.send(key.encode())
         try:
-            data_recvd = self.connection.recv(1024).decode()
+            data_recvd = self.connection.recv(1024).decode()[:-2]
+            if len(data_recvd) == 2 and data_recvd != normal_answ:
+                raise ClientError("ClientError")
+
+            if len(data_recvd) == 2 and data_recvd == normal_answ:
+                return data_returned
             print('recieved answer:\n')
             print(data_recvd)
             tmp_lst = data_recvd.split('\n')
             print(tmp_lst)
-
             if tmp_lst[0] != normal_answ:
                 raise ClientError("ClientError")
 
@@ -40,10 +44,10 @@ class Client:
                 tmp_answ_lst = data.split(' ')
                 data_returned[tmp_answ_lst[0]] = tuple(tmp_answ_lst[1:])
 
-            print(data_returned)
-
         except ClientError as clErr:
             print(clErr)
+
+        return data_returned
 
 #response = b'ok\npalm.cpu 10.5 1501864247\neardrum.cpu 15.3 1501864259\n\n'
 

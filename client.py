@@ -30,7 +30,6 @@ class Client:
             data_recvd = self.connection.recv(1024).decode()[:-2]
             if len(data_recvd) == 2 and data_recvd != normal_answ:
                 raise ClientError("ClientError")
-                return data_returned
 
             if len(data_recvd) == 2 and data_recvd == normal_answ:
                 return data_returned
@@ -40,15 +39,15 @@ class Client:
             # print(tmp_lst)
             if tmp_lst[0] != normal_answ:
                 raise ClientError("ClientError")
-
-            for data in tmp_lst[1:]:
-                tmp_answ_lst = data.split(' ')
-                data_returned[tmp_answ_lst[0]] = tuple(tmp_answ_lst[1:])
-
+            else:
+                for data in tmp_lst[1:]:
+                    tmp_answ_lst = data.split(' ')
+                    data_returned[tmp_answ_lst[0]] = tuple(tmp_answ_lst[1:])
+                return data_returned
         except ClientError as clErr:
             print(clErr)
 
-        return data_returned
+
 
 
     def put(self, key, value, timestamp=None):

@@ -23,10 +23,10 @@ class Client:
 
     def get(self, key):
         normal_answ = 'ok'
-        key = str(key) + '\n'
+        key_tosnd = 'get' + ' ' + str(key) + '\n'
         data_returned = {}
         tmp_lst = []
-        self.connection.send(key.encode())
+        self.connection.send(key_tosnd.encode())
         try:
             data_recvd = self.connection.recv(1024).decode()[:-2]
             if len(data_recvd) == 2 and data_recvd != normal_answ:
@@ -59,7 +59,7 @@ class Client:
     def put(self, key, value, timestamp=None):
         normal_answ = 'ok\n\n'
         if timestamp == None:
-            data_to_snd = str(key)+','+str(value)+','+str(int(time.time()))
+            data_to_snd = 'put' + ' ' + str(key) + ',' + str(value) + ',' + str(int(time.time()))
         else:
             data_to_snd = str(key)+','+str(value)+','+str(timestamp)
         try:

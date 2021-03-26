@@ -53,7 +53,7 @@ class Client:
         except ClientError as clErr:
             print(clErr)
 
-
+#in data_returned values should be int and float!
 
 
     def put(self, key, value, timestamp=None):

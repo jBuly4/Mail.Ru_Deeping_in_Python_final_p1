@@ -47,7 +47,7 @@ class Client:
 
                 for data in tmp_lst[1:]:
                     tmp_answ_lst = data.split(' ')
-                    data_returned[tmp_answ_lst[0]].append((tmp_answ_lst[2], tmp_answ_lst[1],))
+                    data_returned[tmp_answ_lst[0]].append((int(tmp_answ_lst[2]), float(tmp_answ_lst[1]),))
                 sorted(data_returned.items(),key=lambda values: values[1][0])
                 return data_returned
         except ClientError as clErr:
@@ -59,9 +59,9 @@ class Client:
     def put(self, key, value, timestamp=None):
         normal_answ = 'ok\n\n'
         if timestamp == None:
-            data_to_snd = 'put' + ' ' + str(key) + ',' + str(value) + ',' + str(int(time.time()))
+            data_to_snd = 'put' + ' ' + str(key) + ' ' + str(value) + ' '  + str(int(time.time()))
         else:
-            data_to_snd = str(key)+','+str(value)+','+str(timestamp)
+            data_to_snd = 'put' + ' ' + str(key) + ' ' + str(value) + ' ' + str(timestamp)
         try:
             self.connection.send(str.encode(data_to_snd)) # https://docs.python.org/3/library/stdtypes.html?highlight=str.encode#str.encode
             data_recvd = self.connection.recv(1024).decode()

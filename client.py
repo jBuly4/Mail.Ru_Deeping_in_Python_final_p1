@@ -50,8 +50,9 @@ class Client:
                     data_returned[tmp_answ_lst[0]].append((int(tmp_answ_lst[2]), float(tmp_answ_lst[1]),))
                 sorted(data_returned.items(),key=lambda values: values[1][0])
                 return data_returned
-        except ClientError as clErr:
-            print(clErr)
+        except ClientError: #as clErr:
+            #print(clErr)
+            raise
 
 #in data_returned values should be int and float!
 

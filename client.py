@@ -59,9 +59,9 @@ class Client:
     def put(self, key, value, timestamp=None):
         normal_answ = 'ok\n\n'
         if timestamp == None:
-            data_to_snd = 'put' + ' ' + str(key) + ' ' + str(value) + ' '  + str(int(time.time()))
+            data_to_snd = 'put' + ' ' + str(key) + ' ' + str(value) + ' '  + str(int(time.time())) + '\n'
         else:
-            data_to_snd = 'put' + ' ' + str(key) + ' ' + str(value) + ' ' + str(timestamp)
+            data_to_snd = 'put' + ' ' + str(key) + ' ' + str(value) + ' ' + str(timestamp) + '\n'
         try:
             self.connection.send(str.encode(data_to_snd)) # https://docs.python.org/3/library/stdtypes.html?highlight=str.encode#str.encode
             data_recvd = self.connection.recv(1024).decode()

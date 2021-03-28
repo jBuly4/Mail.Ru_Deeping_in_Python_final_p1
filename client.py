@@ -28,17 +28,19 @@ class Client:
         tmp_lst = []
         self.connection.send(key_tosnd.encode())
         try:
-            data_recvd = self.connection.recv(1024).decode()
+            data_recvd = self.connection.recv(1024).decode()[:-2]
 
-            if len(data_recvd) == 4:
+            if len(data_recvd) == 2:
                 if data_recvd != (normal_answ + '\n\n'):
                     raise ClientError("ClientError")
                 else:
                     return data_returned
+            elif len(data_recvd) < 2:
+                raise ClientError("ClientError")
             # print('recieved answer:\n')
             # print(data_recvd)
             tmp_lst = data_recvd.split('\n') #list of lines
-            # print(tmp_lst)
+            print(tmp_lst)
             if tmp_lst[0] != normal_answ:
                 raise ClientError("ClientError")
             else:

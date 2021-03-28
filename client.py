@@ -22,18 +22,19 @@ class Client:
          #     connection.connect((self.adr, seld.port), timeout)
 
     def get(self, key):
-        normal_answ = 'ok'
+        normal_answ = 'ok\n'
         key_tosnd = 'get' + ' ' + str(key) + '\n'
         data_returned = {}
         tmp_lst = []
         self.connection.send(key_tosnd.encode())
         try:
-            data_recvd = self.connection.recv(1024).decode()[:-2]
-            if len(data_recvd) == 2 and data_recvd != normal_answ:
-                raise ClientError("ClientError")
+            data_recvd = self.connection.recv(1024).decode()
 
-            if len(data_recvd) == 2 and data_recvd == normal_answ:
-                return data_returned
+            if len(data_recvd) == 4:
+                if data_recvd != (normal_answ + '\n'):
+                    raise ClientError("ClientError")
+                else:
+                    return data_returned
             # print('recieved answer:\n')
             # print(data_recvd)
             tmp_lst = data_recvd.split('\n') #list of lines

@@ -60,7 +60,11 @@ class Client:
                     data_returned[key_rcvd].append((int(time_rcvd), float(value_rcvd),))
                 except ValueError as clErr:
                     raise ClientError("value and time must be numbers", clErr)
-            sorted(data_returned.items(),key=lambda values: values[1][0])
+            # print(data_returned)
+            # data_returned.sort(key=lambda values: values[1][0])
+            # https://stackoverflow.com/questions/37526577/sort-list-of-tuples-in-a-dictionary
+            for values in data_returned.values():
+                values.sort(key=lambda tuple: tuple[0])
         else:
             raise ClientError("ClientError")
         return data_returned

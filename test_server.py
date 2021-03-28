@@ -13,7 +13,7 @@ print('Соединение установлено:', addr)
 
 # переменная response хранит строку возвращаемую сервером, если вам для
 # тестирования клиента необходим другой ответ, измените ее
-response = b'ok\npalm.cpu 10.5 1501864247\neardrum.cpu 15.3 1501864259\npalm.cpu 10.5 1501864248\npalm.cpu 10.5 1501864249\neardrum.cpu 15.3 1501864257\neardrum.cpu 15.3 1501864253\n\n' #that response works correctly
+response = b'ok\npalm.cpu 10.5 1501864267\neardrum.cpu 15.3 1501864259\npalm.cpu 10.5 1501864238\npalm.cpu 10.5 1501864249\neardrum.cpu 15.3 1501864257\neardrum.cpu 15.3 1501864253\n\n' #that response works correctly
 # response = b'ok\n\n' # that response works correctly
 # response = b'error\nwrong command\n\n' #works
 # response = b'ok\n' #works but 2 exceptions raise

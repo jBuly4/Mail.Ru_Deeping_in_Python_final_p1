@@ -49,10 +49,17 @@ class Client:
         # print(tmp_lst)
         if tmp_lst[0] == normal_answ:
             for data in tmp_lst[1:]:
-                key_rcvd, value_rcvd, time_rcvd = data.split(' ') #list of keys, values and timestamps
+                # print(data.split(' '))
+                if len(data.split(' ')) != 3:
+                    raise ClientError("ClientError")
+                else:
+                    key_rcvd, value_rcvd, time_rcvd = data.split(' ') #list of keys, values and timestamps
                 if key_rcvd not in data_returned:
                     data_returned[key_rcvd] = []
-                data_returned[key_rcvd].append((int(time_rcvd), float(value_rcvd),))
+                try:
+                    data_returned[key_rcvd].append((int(time_rcvd), float(value_rcvd),))
+                except ValueError as clErr:
+                    raise ClientError("value and time must be numbers", clErr)
             sorted(data_returned.items(),key=lambda values: values[1][0])
         else:
             raise ClientError("ClientError")
@@ -89,4 +96,7 @@ class Client:
         #     print(clErr)
 
     def __del__(self):
-        self.connection.close()
+        try:
+            self.connection.close()
+        except socket.error as clErr:
+            raise ClientError("failed to close connection", clErr)

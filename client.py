@@ -38,7 +38,7 @@ class Client:
 
         data_recvd = data_recvd[:-2]
         tmp_lst = data_recvd.split('\n') #list of lines
-        
+
         if tmp_lst[0] == normal_answ:
             for data in tmp_lst[1:]:
                 if len(data.split(' ')) != 3:

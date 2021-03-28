@@ -3,8 +3,9 @@ import time
 
 class ClientError(Exception):
 
-    def __init__(self, text):
-        self.text = text
+    # def __init__(self, text="ClientError"):
+    #     self.text = text
+    pass
 
 class Client:
 
@@ -15,8 +16,11 @@ class Client:
         self.adr = adr
         self.port = port
         self.timeout = timeout
+        try:
+            self.connection = socket.create_connection((self.adr, self.port), timeout)
+        except socket.error as clErr:
+            raise ClientError("failed to connect", clErr)
 
-        self.connection = socket.create_connection((self.adr, self.port), timeout)
 
          # with socket.socket() as connection:
          #     connection.connect((self.adr, seld.port), timeout)
@@ -25,42 +29,37 @@ class Client:
         normal_answ = 'ok'
         key_tosnd = 'get' + ' ' + str(key) + '\n'
         data_returned = {}
+        data_recvd = ''
         tmp_lst = []
-        self.connection.send(key_tosnd.encode())
         try:
-            data_recvd = self.connection.recv(1024).decode()
-            if len(data_recvd) == 4:
-                if data_recvd != (normal_answ + '\n\n'):
-                    raise ClientError("ClientError")
-                else:
-                    return data_returned
-            elif len(data_recvd) < 4:
-                raise ClientError("ClientError")
-            elif len(data_recvd) > 4:
-                if data_recvd[-2:] != '\n\n':
-                    raise ClientError("ClientError")
-                else:
-                    pass
-            data_recvd = data_recvd[:-2]
-            # print('recieved answer:\n')
-            # print(data_recvd)
-            tmp_lst = data_recvd.split('\n') #list of lines
-            print(tmp_lst)
-            if tmp_lst[0] != normal_answ:
-                raise ClientError("ClientError")
-            else:
-                for data in tmp_lst[1:]:
-                    tmp_answ_lst = data.split(' ') #list of keys, values and timestamps
-                    data_returned[tmp_answ_lst[0]] = []
+            self.connection.send(key_tosnd.encode())
+        except socket.error as clErr:
+            raise ClientError("failed to send get request", clErr)
 
-                for data in tmp_lst[1:]:
-                    tmp_answ_lst = data.split(' ')
-                    data_returned[tmp_answ_lst[0]].append((int(tmp_answ_lst[2]), float(tmp_answ_lst[1]),))
-                sorted(data_returned.items(),key=lambda values: values[1][0])
-                return data_returned
-        except ClientError #as clErr:
-            #print(clErr)
-            # raise
+        while not data_recvd.endswith('\n\n'):
+            try:
+                data_recvd += self.connection.recv(1024).decode()
+            except socket.error as clErr:
+                raise ClientError("failed to recieve data from get request", clErr)
+
+        data_recvd = data_recvd[:-2]
+        # print('recieved answer:\n')
+        # print(data_recvd)
+        tmp_lst = data_recvd.split('\n') #list of lines
+        # print(tmp_lst)
+        if tmp_lst[0] == normal_answ:
+            for data in tmp_lst[1:]:
+                key_rcvd, value_rcvd, time_rcvd = data.split(' ') #list of keys, values and timestamps
+                if key_rcvd not in data_returned:
+                    data_returned[key_rcvd] = []
+                data_returned[key_rcvd].append((int(time_rcvd), float(value_rcvd),))
+            sorted(data_returned.items(),key=lambda values: values[1][0])
+        else:
+            raise ClientError("ClientError")
+        return data_returned
+        # except ClientError as clErr:
+        #     #print(clErr)
+        #     raise ClientError('ClientError', clErr)
 
 #in data_returned values should be int and float!
 
@@ -73,13 +72,21 @@ class Client:
             data_to_snd = 'put' + ' ' + str(key) + ' ' + str(value) + ' ' + str(timestamp) + '\n'
         try:
             self.connection.send(str.encode(data_to_snd)) # https://docs.python.org/3/library/stdtypes.html?highlight=str.encode#str.encode
+        except socket.error as clErr:
+            raise ClientError("failed to send get request", clErr)
+        try:
             data_recvd = self.connection.recv(1024).decode()
-            # print('recieved answer:\n')
-            # print(data_recvd)
-            if data_recvd != normal_answ:
-                raise ClientError("ClientError")
-        except ClientError as clErr:
-            print(clErr)
+        except socket.error as clErr:
+            raise ClientError("failed to send get request", clErr)
+
+        # print('recieved answer:\n')
+        # print(data_recvd)
+        if data_recvd == normal_answ:
+            pass
+        else:
+            raise ClientError("ClientError")
+        # except ClientError as clErr:
+        #     print(clErr)
 
     def __del__(self):
         self.connection.close()
